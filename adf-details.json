@@ -1,0 +1,159 @@
+{
+    "name": "dolar2",
+    "properties": {
+        "activities": [
+            {
+                "name": "ingestao-databricks-para-stgestudos",
+                "type": "DatabricksNotebook",
+                "dependsOn": [],
+                "policy": {
+                    "timeout": "7.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "notebookPath": "{CONFIDENTIAL}"
+                },
+                "linkedServiceName": {
+                    "referenceName": "notebook_api_dolar2_henrique",
+                    "type": "LinkedServiceReference"
+                }
+            },
+            {
+                "name": "converte_datatype",
+                "type": "SqlServerStoredProcedure",
+                "dependsOn": [
+                    {
+                        "activity": "ingestao-databricks-para-stgestudos",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "7.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "storedProcedureName": "[dolar_henrique_mesquita].[converte2_datatype]"
+                },
+                "linkedServiceName": {
+                    "referenceName": "conn_henrique_azure_sql",
+                    "type": "LinkedServiceReference"
+                }
+            },
+            {
+                "name": "sql_to_blob",
+                "type": "Copy",
+                "dependsOn": [
+                    {
+                        "activity": "converte_datatype",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "7.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "source": {
+                        "type": "SqlServerSource",
+                        "queryTimeout": "02:00:00",
+                        "partitionOption": "None"
+                    },
+                    "sink": {
+                        "type": "ParquetSink",
+                        "storeSettings": {
+                            "type": "AzureBlobStorageWriteSettings"
+                        },
+                        "formatSettings": {
+                            "type": "ParquetWriteSettings"
+                        }
+                    },
+                    "enableStaging": false,
+                    "translator": {
+                        "type": "TabularTranslator",
+                        "mappings": [
+                            {
+                                "source": {
+                                    "name": "cotacaoCompra",
+                                    "type": "Decimal",
+                                    "physicalType": "decimal",
+                                    "scale": 5,
+                                    "precision": 6
+                                },
+                                "sink": {
+                                    "name": "cotacaoCompra",
+                                    "type": "Decimal",
+                                    "physicalType": "DECIMAL"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "cotacaoVenda",
+                                    "type": "Decimal",
+                                    "physicalType": "decimal",
+                                    "scale": 5,
+                                    "precision": 6
+                                },
+                                "sink": {
+                                    "name": "cotacaoVenda",
+                                    "type": "Decimal",
+                                    "physicalType": "DECIMAL"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "dataHoraCotacao",
+                                    "type": "DateTime",
+                                    "physicalType": "datetime"
+                                },
+                                "sink": {
+                                    "name": "dataHoraCotacao",
+                                    "type": "DateTime",
+                                    "physicalType": "INT_96"
+                                }
+                            }
+                        ],
+                        "typeConversion": true,
+                        "typeConversionSettings": {
+                            "allowDataTruncation": true,
+                            "treatBooleanAsNumber": false
+                        }
+                    }
+                },
+                "inputs": [
+                    {
+                        "referenceName": "tabela_final_henrique",
+                        "type": "DatasetReference"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "referenceName": "henrique_final_parquet",
+                        "type": "DatasetReference"
+                    }
+                ]
+            }
+        ],
+        "folder": {
+            "name": "henrique_mesquita/Lab 02"
+        },
+        "annotations": [],
+        "lastPublishTime": "2022-01-13T15:33:27Z"
+    },
+    "type": "Microsoft.DataFactory/factories/pipelines"
+}
