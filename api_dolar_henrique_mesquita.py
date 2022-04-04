@@ -18,11 +18,11 @@ def incoming_data(url):
 url = "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarPeriodo(dataInicial=@dataInicial,dataFinalCotacao=@dataFinalCotacao)?@dataInicial=%2701-01-2019%27&@dataFinalCotacao=%2712-31-2025%27&$top=9000&$format=text/csv&$select=cotacaoCompra,cotacaoVenda,dataHoraCotacao"
 table_name = 'dolar_henrique_mesquita.dolar2_Stage_henrique_mesquita'
 
-jdbcServer = "sql-estudo.database.windows.net"
-jdbcDatabase = "db-estudos"
+jdbcServer = "sql-user.database.windows.net"
+jdbcDatabase = "user-estudos"
 jdbcPort = 1433
-jdbcUsername = "admin-azure"
-jdbcPassword = "a&Ehs&HB"
+jdbcUsername = "{username}"
+jdbcPassword = "{password}"
 jdbcUrl = f"jdbc:sqlserver://{jdbcServer}:{jdbcPort};database={jdbcDatabase};user={jdbcUsername};password={jdbcPassword}"
 
 df = incoming_data(url)
