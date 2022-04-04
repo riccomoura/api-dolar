@@ -8,3 +8,8 @@ Orquestração de pipelines para ingestão, tratamento e visualização de dados
 ## Orquestração das pipelines no Azure Data Factory
 
 ![alt text](https://i.imgur.com/hYnAMka.png)
+
+## Trigger para execução diária
+
+![alt text](https://i.imgur.com/UCon6QP.png)
+
