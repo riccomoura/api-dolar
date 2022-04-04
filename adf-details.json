@@ -1,5 +1,5 @@
 {
-    "name": "dolar2",
+    "name": "cotacao_dolar_bcb",
     "properties": {
         "activities": [
             {
@@ -150,7 +150,7 @@
             }
         ],
         "folder": {
-            "name": "henrique_mesquita/Lab 02"
+            "name": "henrique_mesquita/Cotacao Dolar BCB"
         },
         "annotations": [],
         "lastPublishTime": "2022-01-13T15:33:27Z"
